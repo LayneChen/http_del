@@ -143,7 +143,20 @@ class receive{
             }
             $response .= '</items></response>';
 
-        } else {
+        }elseif ($param['method'] == 'singleitem.synchronize') {
+            $createTime      = date("Y-m-d H:i:s",time());
+            $response = '<?xml version="1.0" encoding="utf-8"?>
+            <response>
+                <deliveryOrderId></deliveryOrderId>
+                <createTime>' . $createTime . '</createTime>
+                <flag>' . 'success' . '</flag>
+                <code>' . '20000' . '</code>
+                <message>' . '同步成功' . '</message>
+            </response>';
+            
+        }
+        
+        else {
             $response = '<?xml version="1.0" encoding="utf-8"?>
             <response>
                 <flag>failure</flag>
