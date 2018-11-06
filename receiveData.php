@@ -86,7 +86,11 @@ class receive{
 
         } elseif ($param['method'] == 'order.cancel') {                                                                 //取消订单
             if( $sign === $signCheck ) {
-                $response = self::orderCancel($body);
+                $response = array(
+                    'flag'    => 'success',
+                    'code'    => '20000',
+                    'message' => '取消成功',
+                );
             } else {
                 $response = array(
                     'flag'    => 'failure',
