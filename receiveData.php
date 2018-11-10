@@ -103,7 +103,19 @@ class receive{
 
         } elseif ($param['method'] == 'inventory.query') {                                                              //查询库存
             if( $sign === $signCheck ) {
-                $result = self::inventoryQuery($body);
+                $arrayInfo     = simplexml_load_string($body);                                                                  //读取xml,转换成对象数组
+                $arrayInfo     = self::object_array($arrayInfo);
+                $result = array(
+                    'flag'    => 'success',
+                    'code'    => '20000',
+                    'message' => '查询成功 ',
+                    'items'   => array(
+                        $arrayInfo['criteriaList']['criteria']['itemCode']=>array(
+                            'physi' => '20',
+                            'takes' => '10',
+                        ),
+                    )
+                );
             } else {
                 $response = array(
                     'flag'    => 'failure',
@@ -452,6 +464,90 @@ class receive{
     private static function checkCustomerId($customerId, $warehouseCode) {
         return $customerId =='HTC00006'  && $warehouseCode == 'HTW00006' ? TRUE : FALSE;
     }
+    
+    
+    public static function backLogic(){
+
+        $url = 'http://wmsapi.wdgj.com/wdgj/QiMen/OpenApi/11020863';
+            $itemXml = '
+                <item>
+                    <itemCode>' . '69123456' .'</itemCode>
+                    <quantity>' . '2' . '</quantity>
+                    <itemId> '. '1' .'</itemId>
+                </item>';
+
+            $orderLinesXml = '
+        <orderLine>
+            <orderSourceCode>' . 'JY1811100001' . '</orderSourceCode>
+            <subSourceCode>' . '' . '</subSourceCode>
+            <ownerCode>' . 'HTC00006' . '</ownerCode>
+            <itemCode>' . '69123456' . '</itemCode>
+            <inventoryType>'.'ZP'.'</inventoryType>
+            <planQty>' . '2' . '</planQty>
+            <actualQty>' . '2' . '</actualQty>
+        </orderLine>';
+
+
+
+        $body  = '<?xml version="1.0" encoding="utf-8"?>
+        <request>
+            <deliveryOrder>
+                <deliveryOrderCode>' . 'JY1811100001' . '</deliveryOrderCode>
+                <deliveryOrderId>' . 'JY1811100001' . '</deliveryOrderId>
+                <warehouseCode>' . 'HTW00006' . '</warehouseCode>
+                <orderType>'.'JYCK'.'</orderType>
+                <status>DELIVERED</status>
+                <outBizCode>'.'HTSWE2018101103123123234'.'</outBizCode>
+                <confirmType>0</confirmType>
+            </deliveryOrder>
+            <packages>
+                <package>
+                    <logisticsCode>' . 'YTO' . '</logisticsCode>
+                    <logisticsName>' . '圆通' . '</logisticsName>
+                    <expressCode>' . '817466742924' . '</expressCode>
+                    <packageCode>'.  'HTW00006JY1811100001' .'</packageCode>
+                    <weight>0</weight>
+                    <items>'
+                    .$itemXml.'
+                    </items>
+                </package>
+            </packages>
+            <orderLines>' . $orderLinesXml . '
+            </orderLines>
+        </request>';
+
+        $param = array(                                                                                                 // 按接口提供的逐一填写
+            "format"      => 'xml',
+            "app_key"     => '1012405954',
+            "v"           => '2.0',
+            "sign_method" => 'md5',
+            "customerId"  => 'c1541753103063',
+            "method"      => 'deliveryorder.confirm',
+            "timestamp"   => date("Y-m-d H:i:s"),
+        );
+        $param['sign'] = self::sign('sandboxbef2a72d0712f30eae1d4049e', $param , $body);
+        $url = $url . '?' . http_build_query($param);
+
+        //初始化
+        $curl = curl_init();
+        //设置抓取的url
+        curl_setopt($curl, CURLOPT_URL, $url);
+        //设置头文件的信息作为数据流输出
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+        //设置获取的信息以文件流的形式返回，而不是直接输出。
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        //设置post方式提交
+        curl_setopt($curl, CURLOPT_POST, 1);
+        //设置post数据
+        curl_setopt($curl, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml"));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+        //执行命令
+        $data = curl_exec($curl);
+        //关闭URL请求
+        curl_close($curl);
+        //显示获得的数据
+        print_r($data);exit;
+    }
 
 }
 
@@ -467,3 +563,4 @@ if(isset($body)){
 
 $receive = new receive();
 $receive::receiveRequest($body);
+//receive::backLogic();
