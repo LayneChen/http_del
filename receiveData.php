@@ -200,8 +200,8 @@ class receive{
         self::getSecArray($oderData, $orderLine);
 
         $re = self::checkCustomerId($oderData[0]['ownerCode'], $deliveryOrder['warehouseCode']);                              //获取分销商的信息
-        
-        if(empty(self::$mallUserId) || $re) {
+
+        if(!$re) {
             return array(
                 'flag'    => 'failure',
                 'code'    => '40030',
