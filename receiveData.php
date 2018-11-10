@@ -450,7 +450,7 @@ class receive{
      * 作者 : 高梁
      */
     private static function checkCustomerId($customerId, $warehouseCode) {
-        return $customerId =='c1541753103063'  && $warehouseCode == 'HTW00006' ? TRUE : FALSE;
+        return $customerId =='HTC00006'  && $warehouseCode == 'HTW00006' ? TRUE : FALSE;
     }
 
 }
