@@ -561,6 +561,6 @@ if(isset($body)){
     file_put_contents('receiveData.txt',date("Y-m-d H:i:s")."[body]:".print_r($body,TRUE),FILE_APPEND);
 }
 
-$receive = new receive();
-$receive::receiveRequest($body);
+//$receive = new receive();
+//$receive::receiveRequest($body);
 //receive::backLogic();
