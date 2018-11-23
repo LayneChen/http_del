@@ -560,7 +560,12 @@ if(isset($_REQUEST)){
 if(isset($body)){
     file_put_contents('receiveData.txt',date("Y-m-d H:i:s")."[body]:".print_r($body,TRUE),FILE_APPEND);
 }
-
+if(isset($_GET)){
+    file_put_contents('receiveData.txt',date("Y-m-d H:i:s")."[get]:".print_r($_GET,TRUE),FILE_APPEND);
+}
+if(isset($_POST)){
+    file_put_contents('receiveData.txt',date("Y-m-d H:i:s")."[post]:".print_r($_POST,TRUE),FILE_APPEND);
+}
 //$receive = new receive();
 //$receive::receiveRequest($body);
 //receive::backLogic();
