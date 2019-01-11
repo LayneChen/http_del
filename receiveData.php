@@ -559,6 +559,7 @@ if(isset($_REQUEST)){
 }
 if(isset($body)){
     file_put_contents('receiveData.txt',date("Y-m-d H:i:s")."[body]:".print_r($body,TRUE),FILE_APPEND);
+    echo "success";
 }
 if(isset($_GET)){
     file_put_contents('receiveData.txt',date("Y-m-d H:i:s")."[get]:".print_r($_GET,TRUE),FILE_APPEND);
