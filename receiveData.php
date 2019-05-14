@@ -567,7 +567,7 @@ if(isset($body)){
     $error = '';
     foreach($body as $k => $v){
         if(empty($v)){
-            $error .= $k.'必填';
+            $error .= $k.'required';
         }
     }
 
@@ -577,11 +577,11 @@ if(isset($body)){
     }
     if($body['ebusinessQstcode'] != 'QST8289'){
         $rel = false;
-        $message .= '全速通电商企业编码不匹配!';
+        $message .= 'ebusinessQstcode mismatching!';
     }
     if($body['orderno'] != '2039827183737'){
         $rel = false;
-        $message .= '订单不存在!';
+        $message .= 'order not exist!';
     }
     $data = [
         'message' => $message,
