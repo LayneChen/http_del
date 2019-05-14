@@ -559,6 +559,7 @@ if(isset($_REQUEST)){
 }
 if(isset($body)){
     file_put_contents('receiveData.txt',date("Y-m-d H:i:s")."[body]:".print_r($body,TRUE),FILE_APPEND);
+    $body = json_decode($body,true);
     $message = '';
     $rel = true;
     unset($body['weight']);
@@ -569,6 +570,7 @@ if(isset($body)){
             $error .= $k.'必填';
         }
     }
+
     if($error != ''){
         $rel = false;
         $message .= $error;
@@ -577,12 +579,16 @@ if(isset($body)){
         $rel = false;
         $message .= '全速通电商企业编码不匹配!';
     }
+    if($body['orderno'] != '2039827183737'){
+        $rel = false;
+        $message .= '订单不存在!';
+    }
     $data = [
         'message' => $message,
         'rel'     => $rel,
         'status'  => $rel ? '200':'300',
     ];
-    return json_encode($data);
+    echo json_encode($data);
 }
 if(isset($_GET)){
     file_put_contents('receiveData.txt',date("Y-m-d H:i:s")."[get]:".print_r($_GET,TRUE),FILE_APPEND);
