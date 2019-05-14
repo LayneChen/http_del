@@ -559,7 +559,30 @@ if(isset($_REQUEST)){
 }
 if(isset($body)){
     file_put_contents('receiveData.txt',date("Y-m-d H:i:s")."[body]:".print_r($body,TRUE),FILE_APPEND);
-    echo "success";
+    $message = '';
+    $rel = true;
+    unset($body['weight']);
+    unset($body['orderUuid']);
+    $error = '';
+    foreach($body as $k => $v){
+        if(empty($v)){
+            $error .= $k.'必填';
+        }
+    }
+    if($error != ''){
+        $rel = false;
+        $message .= $error;
+    }
+    if($body['ebusinessQstcode'] != 'QST8289'){
+        $rel = false;
+        $message .= '全速通电商企业编码不匹配!';
+    }
+    $data = [
+        'message' => $message,
+        'rel'     => $rel,
+        'status'  => $rel ? '200':'300',
+    ];
+    return json_encode($data);
 }
 if(isset($_GET)){
     file_put_contents('receiveData.txt',date("Y-m-d H:i:s")."[get]:".print_r($_GET,TRUE),FILE_APPEND);
